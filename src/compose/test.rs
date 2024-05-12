@@ -1094,6 +1094,28 @@ mod test {
         output_eq!(wgsl, "tests/expected/conditional_import_b.txt");
     }
 
+    #[test]
+    fn conditional_import2() {
+        let mut composer = Composer::default();
+
+        composer
+            .add_composable_module(ComposableModuleDescriptor {
+                source: include_str!("tests/conditional_import2/mod.wgsl"),
+                file_path: "tests/conditional_import2/mod.wgsl",
+                ..Default::default()
+            })
+            .unwrap();
+
+        composer
+            .make_naga_module(NagaModuleDescriptor {
+                source: include_str!("tests/conditional_import2/top.wgsl"),
+                file_path: "tests/conditional_import2/top.wgsl",
+                ..Default::default()
+            })
+            .map_err(|err| println!("{}", err.emit_to_string(&composer)))
+            .unwrap();
+    }
+
     #[cfg(feature = "test_shader")]
     #[test]
     fn rusty_imports() {
